@@ -42,7 +42,6 @@ class App extends React.Component {
         string.fret = selectedFret;
       }
     })
-    console.log(this.state.chord)
   }
 
   getChordName() {
@@ -51,11 +50,18 @@ class App extends React.Component {
       chord += string.fret;
     });
 
-    console.log(chord)
     $.ajax({
       method: 'GET',
-      url: `/name/?query=${chord}`
-
+      url: `/name/?query=${chord}`,
+      success: (data) => {
+        let results = {};
+        JSON.parse(data).objects.forEach(result => {
+          for (let prop in result) {
+            results[prop] = result[prop];
+          }
+        })
+        $('#chordName').text(results.name);
+      }
     })
   }
 
@@ -63,6 +69,7 @@ class App extends React.Component {
     return (<div>
       <h1>Guitar Chord Finder</h1>
       <button className="btn btn-info" onClick={this.getChordName.bind(this)}>Get Chord Name</button>
+      <h3>Chord Name: <span id='chordName'></span></h3>
       <div>
         <Guitar setNote={this.setNote.bind(this)} chord={this.state.chord}/>
       </div>

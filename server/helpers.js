@@ -17,7 +17,7 @@ const fetchChord = (nameOrFingering, callback) => {
     if (err) {
       console.error(err);
     }
-    console.log(body)
+    callback(body);
   })
 }
 

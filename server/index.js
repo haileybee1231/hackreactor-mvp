@@ -11,12 +11,12 @@ app.use(express.static(__dirname + '/../react-client/dist'));
 app.use(bodyParser.json());
 
 app.get('/name*', function(req, res) {
-  let target = req.url.slice(13);
-  console.log(target);
+  let query = req.url.slice(13);
 
-  fetcher.fetchChord(target);
+  fetcher.fetchChord(query, (data) => {
+    res.status(200).end(data);
+  });
 
-  res.status(200).end();
 })
 
 app.listen(3000, function() {
