@@ -37,7 +37,6 @@ class App extends React.Component {
   }
 
   setNote(selectedFret, selectedString) {
-    console.log(selectedFret, selectedString)
     this.state.chord.forEach(string => {
       if (string.string === selectedString) {
         string.fret = selectedFret;

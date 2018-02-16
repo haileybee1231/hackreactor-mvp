@@ -14,10 +14,10 @@ class Fret extends React.Component {
       this.props.selectFret(this.props.fret);
     } else {
       this.props.selectFret(0);
+    }
     this.setState({
         selected: !this.state.selected
-      });
-    }
+    });
   }
 
   render() {
