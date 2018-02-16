@@ -3,7 +3,6 @@ import String from '../components/String.jsx';
 
 const Guitar = (props) => (
   <div>
-    <h4>Guitar</h4>
     {props.chord.map((string, index) => {
       return (
         <div style={{'clear':'both'}} key={index}>

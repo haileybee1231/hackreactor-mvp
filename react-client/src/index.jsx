@@ -10,27 +10,27 @@ class App extends React.Component {
       chord: [
         {
           string: 'E',
-          fret: 0
+          fret: 'o'
         },
         {
           string: 'A',
-          fret: 0
+          fret: 'o'
         },
         {
           string: 'D',
-          fret: 0
+          fret: 'o'
         },
         {
           string: 'G',
-          fret: 0
+          fret: 'o'
         },
         {
           string: 'B',
-          fret: 0
+          fret: 'o'
         },
         {
           string: 'e',
-          fret: 0
+          fret: 'o'
         },
       ]
     }
@@ -42,12 +42,30 @@ class App extends React.Component {
         string.fret = selectedFret;
       }
     })
+    console.log(this.state.chord)
+  }
+
+  getChordName() {
+    let chord = '';
+    this.state.chord.forEach(string => {
+      chord += string.fret;
+    });
+
+    console.log(chord)
+    $.ajax({
+      method: 'GET',
+      url: `/name/?query=${chord}`
+
+    })
   }
 
   render () {
     return (<div>
       <h1>Guitar Chord Finder</h1>
-      <Guitar setNote={this.setNote.bind(this)} chord={this.state.chord}/>
+      <button className="btn btn-info" onClick={this.getChordName.bind(this)}>Get Chord Name</button>
+      <div>
+        <Guitar setNote={this.setNote.bind(this)} chord={this.state.chord}/>
+      </div>
     </div>)
   }
 }
