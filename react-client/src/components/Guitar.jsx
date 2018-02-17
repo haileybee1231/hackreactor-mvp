@@ -3,16 +3,16 @@ import String from '../components/String.jsx';
 
 const Guitar = (props) => (
   <div>
-    {props.chord.map((string, index) => {
-      return (
-        <div style={{'clear':'both'}} key={index}>
-          <String
-            setNote={props.setNote}
-            string={string.string}
-            fret={string.fret}/>
-        </div>
-      )
-    })}
+    {Object.keys(props.chord).map((key, index) => (
+      <div style={{'clear':'both'}} key={index}>
+        <String
+          muted={props.chord[key].muted}
+          setFret={props.setFret}
+          toggleMute={props.toggleMute}
+          name={key}
+          fret={props.chord[key].fret}/>
+      </div>
+    ))}
   </div>
 )
 

@@ -4,6 +4,10 @@ import $ from 'jquery';
 class ChordForm extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      chord: this.props.chord
+    }
   }
 
   search(e) {
@@ -14,7 +18,23 @@ class ChordForm extends React.Component {
     let seventh = $('select[name=7th]').val();
     let sus = $('select[name=suspensions]').val();
     let extra = $('input[type=text]').val();
-    console.log(`${note}${accidental}${altered}${seventh}${sus}${extra}`)
+    let query = `${note}${accidental}${altered}${seventh}${sus}${extra}`;
+
+    $.ajax({
+      method: 'GET',
+      url: `/name/?query=${query}`,
+      success: (data) => {
+        let results = {};
+        JSON.parse(data).objects.forEach(result => {
+          for (let prop in result) {
+            results[prop] = result[prop];
+          }
+        })
+        let fingering = results.code;
+
+        this.props.renderChord(fingering);
+      }
+    })
   }
 
   render() {
@@ -79,7 +99,7 @@ class ChordForm extends React.Component {
           <input type="text" placeholder="other" style={{"maxWidth": "100px"}}></input>
         </div>
         <div style={styles.row, {'paddingBottom':'20px'}}>
-          <button onClick={this.search}>Get Chord Fingering</button>
+          <button onClick={this.search.bind(this)}>Get Chord Fingering</button>
         </div>
       </form>
     )
