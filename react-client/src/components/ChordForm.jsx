@@ -1,8 +1,13 @@
 import React from 'react';
+import $ from 'jquery';
 
 class ChordForm extends React.Component {
   constructor(props) {
     super(props);
+  }
+
+  submit() {
+    submission = `${$('form')}`;
   }
 
   render() {
@@ -12,11 +17,12 @@ class ChordForm extends React.Component {
         'padding': '10px'
       },
       row: {
-        'margin': '20px'
+        'margin': '20px',
       },
       form: {
         'marginTop': '30px',
         'border': '1px solid black',
+        'textAlign':'center',
         'width': '55%'
       }
     }
@@ -60,6 +66,9 @@ class ChordForm extends React.Component {
           </select>
           <h4 style={styles.h4}>Other:</h4>
           <input type="text" placeholder="other" style={{"maxWidth": "100px"}}></input>
+        </div>
+        <div style={styles.row, {'paddingBottom':'20px'}}>
+          <button>Submit</button>
         </div>
       </form>
     )

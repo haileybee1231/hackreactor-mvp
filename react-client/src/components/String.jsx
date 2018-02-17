@@ -30,9 +30,7 @@ class String extends React.Component {
       muted: !this.state.muted,
     })
     if (!this.state.muted) {
-      this.setState({
-        selected: 'x'
-      })
+      this.props.setNote('x', this.props.string);
       $(e.target).css({'backgroundColor': 'red'});
     } else {
       $(e.target).css({'backgroundColor': ''});
