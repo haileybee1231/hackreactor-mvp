@@ -16,15 +16,17 @@ const String = ({setFret, toggleMute, name, fret, muted}) => (
       onClick={() => toggleMute(name)}
       style={muted ? styles.muted : null}
     >X</button>
-    {fretNumbers.map(fretNumber => (
-      <Fret
+    {fretNumbers.map(fretNumber => {
+      const selected = fret === fretNumber;
+      console.log(fret, fretNumber);
+      return <Fret
         setFret={setFret}
         key={fretNumber}
         name={name}
         fretNumber={fretNumber}
-        selected={fret === fretNumber}
+        selected={selected}
         />
-    ))}
+    })}
   </div>
 )
 

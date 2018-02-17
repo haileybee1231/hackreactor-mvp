@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import Guitar from '../src/components/Guitar.jsx';
-// import ChordForm from '../src/components/ChordForm.jsx';
+import ChordForm from '../src/components/ChordForm.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -56,8 +56,6 @@ class App extends React.Component {
     const replacement = this.state[selectedString];
     let muted = replacement.muted;
 
-
-
     replacement.fret = muted ? 'o' : 'x';
     replacement.muted = !muted;
 
@@ -73,7 +71,6 @@ class App extends React.Component {
       chord += this.state[`string${index}`].fret;
       index++;
     }
-    console.log(chord);
 
     $.ajax({
       method: 'GET',
@@ -93,20 +90,41 @@ class App extends React.Component {
       }
     })
   }
-  //
-  // renderChord(fingering, index = 5) {
-  //   let currentState = this.state.chord.slice();
-  //   currentState.forEach(string => {
-  //     isNaN(fingering[index]) ?
-  //       string.fret = fingering[index] :
-  //       string.fret = parseInt(fingering[index]);
-  //     index--;
-  //   });
-  //   this.setState({
-  //     chord: currentState
-  //   })
-  //   console.log(this.state.chord)
-  // }
+
+  getFingering(e) {
+    e.preventDefault();
+    let note = $('select[name=notes]').val();
+    let accidental = $('select[name=accidentals]').val();
+    let altered = $('select[name=altered]').val();
+    let seventh = $('select[name=7th]').val();
+    let sus = $('select[name=suspensions]').val();
+    let extra = $('input[type=text]').val();
+    let query = `${note}${accidental}${altered}${seventh}${sus}${extra}`;
+
+    $.ajax({
+      method: 'GET',
+      url: `/name/?query=${query}`,
+      success: (data) => {
+        let results = {};
+        JSON.parse(data).objects.forEach(result => {
+          for (let prop in result) {
+            results[prop] = result[prop];
+          }
+        })
+        let fingering = results.code;
+
+        const replacement = this.state;
+        for (let i = 1; i < 7; i++) {
+          let note = fingering[i - 1];
+          if (!isNaN(note)) {
+            note = +note;
+          }
+          replacement[`string${i}`].fret = note;
+        }
+        this.setState(replacement);
+      }
+    })
+  }
 
   render () {
     return (<div>
@@ -120,7 +138,7 @@ class App extends React.Component {
           toggleMute={this.toggleMute.bind(this)}/>
       </div>
       <div>
-        {/*)<ChordForm renderChord={this.renderChord.bind(this)} chord={this.state}/>*/}
+        <ChordForm getFingering={this.getFingering.bind(this)} chord={this.state}/>
       </div>
     </div>)
   }
