@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import Guitar from '../src/components/Guitar.jsx';
+import ChordForm from '../src/components/ChordForm.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -9,19 +10,7 @@ class App extends React.Component {
     this.state = {
       chord: [
         {
-          string: 'E',
-          fret: 'o'
-        },
-        {
-          string: 'A',
-          fret: 'o'
-        },
-        {
-          string: 'D',
-          fret: 'o'
-        },
-        {
-          string: 'G',
+          string: 'e',
           fret: 'o'
         },
         {
@@ -29,7 +18,19 @@ class App extends React.Component {
           fret: 'o'
         },
         {
-          string: 'e',
+          string: 'G',
+          fret: 'o'
+        },
+        {
+          string: 'D',
+          fret: 'o'
+        },
+        {
+          string: 'A',
+          fret: 'o'
+        },
+        {
+          string: 'E',
           fret: 'o'
         },
       ]
@@ -49,6 +50,7 @@ class App extends React.Component {
     this.state.chord.forEach(string => {
       chord += string.fret;
     });
+    chord = chord.split('').reverse().join('');
 
     $.ajax({
       method: 'GET',
@@ -60,7 +62,11 @@ class App extends React.Component {
             results[prop] = result[prop];
           }
         })
-        $('#chordName').text(results.name);
+        if (results.name) {
+          $('#chordName').html(results.name);
+        } else {
+          $('#chordName').html('Chord not in library, or API query limit reached =,( Try another chord or try again later.');
+        }
       }
     })
   }
@@ -69,12 +75,15 @@ class App extends React.Component {
     return (<div>
       <h1>Guitar Chord Finder</h1>
       <button className="btn btn-info" onClick={this.getChordName.bind(this)}>Get Chord Name</button>
-      <h3>Chord Name: <span id='chordName'></span></h3>
+      <h3>Chord Name: <span id='chordName'>Em7add4</span></h3>
       <div>
         <Guitar setNote={this.setNote.bind(this)} chord={this.state.chord}/>
+      </div>
+      <div>
+        <ChordForm/>
       </div>
     </div>)
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(<App/>, document.getElementById('app'));

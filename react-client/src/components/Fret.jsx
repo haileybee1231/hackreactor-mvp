@@ -5,19 +5,24 @@ class Fret extends React.Component {
     super(props);
 
     this.state = {
-      selected: false
+      selected: false,
+      currentlySelected: this.props.currentlySelected
     }
   }
 
   onClick() {
-    if (!this.state.selected) {
-      this.props.selectFret(this.props.fret);
-    } else {
-      this.props.selectFret('o');
+    if (!this.props.muted) {
+      if (this.state.currentlySelected === 'o') {
+        if (!this.state.selected) {
+          this.props.selectFret(this.props.fret);
+        } else {
+          this.props.selectFret('o');
+        }
+        this.setState({
+          selected: !this.state.selected
+        });
+      }
     }
-    this.setState({
-        selected: !this.state.selected
-    });
   }
 
   render() {
