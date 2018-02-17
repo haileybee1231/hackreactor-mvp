@@ -66,31 +66,33 @@ class App extends React.Component {
     });
   }
 
-  // getChordName() {
-  //   let chord = '';
-  //   this.state.chord.forEach(string => {
-  //     chord += string.fret;
-  //   });
-  //   chord = chord.split('').reverse().join('');
-  //
-  //   $.ajax({
-  //     method: 'GET',
-  //     url: `/fingering/?query=${chord}`,
-  //     success: (data) => {
-  //       let results = {};
-  //       JSON.parse(data).objects.forEach(result => {
-  //         for (let prop in result) {
-  //           results[prop] = result[prop];
-  //         }
-  //       })
-  //       if (results.name) {
-  //         $('#chordName').html(results.name);
-  //       } else {
-  //         $('#chordName').html('Chord not in library, or API query limit reached =,( Try another chord or try again later.');
-  //       }
-  //     }
-  //   })
-  // }
+  getChordName() {
+    let chord = '';
+    let index = 1;
+    while (index < 7) {
+      chord += this.state[`string${index}`].fret;
+      index++;
+    }
+    console.log(chord);
+
+    $.ajax({
+      method: 'GET',
+      url: `/fingering/?query=${chord}`,
+      success: (data) => {
+        let results = {};
+        JSON.parse(data).objects.forEach(result => {
+          for (let prop in result) {
+            results[prop] = result[prop];
+          }
+        })
+        if (results.name) {
+          $('#chordName').html(results.name);
+        } else {
+          $('#chordName').html('Chord not in library, or API query limit reached =,( Try another chord or try again later.');
+        }
+      }
+    })
+  }
   //
   // renderChord(fingering, index = 5) {
   //   let currentState = this.state.chord.slice();
@@ -109,7 +111,7 @@ class App extends React.Component {
   render () {
     return (<div>
       <h1>Guitar Chord Finder</h1>
-      {/*}<button className="btn btn-info" onClick={this.getChordName.bind(this)}>Get Chord Name</button>*/}
+      <button className="btn btn-info" onClick={this.getChordName.bind(this)}>Get Chord Name</button>
       <h3>Chord Name: <span id='chordName'>Em7add4</span></h3>
       <div>
         <Guitar
