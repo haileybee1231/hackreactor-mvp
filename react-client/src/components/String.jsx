@@ -21,7 +21,7 @@ class String extends React.Component {
     }
 
     if (!this.state.muted) {
-      this.props.setNote(fret, this.props.string)
+      this.props.setNote(fret, this.props.string);
     }
   }
 

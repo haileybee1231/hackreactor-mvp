@@ -41,6 +41,7 @@ class Fret extends React.Component {
         position: 'relative',
         left: '-20px',
         top: '-5px',
+        marginRight: '-15px',
         height: '15px',
         display: 'inline'
       }
