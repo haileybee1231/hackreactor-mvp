@@ -1,8 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var fetcher = require('./helpers.js');
-
-var items = require('../database-mysql');
+var mongo = require('../database/index.js')
 
 
 var app = express();
@@ -16,17 +15,24 @@ app.get('/fingering*', function(req, res) {
   fetcher.fetchChord(query, (data) => {
     res.status(200).end(data);
   });
-
 })
 
 app.get('/name*', function(req, res) {
-  console.log(req)
   let query = req.url.slice(13);
 
   fetcher.fetchChord(query, (data) => {
     res.status(200).end(data);
   });
+})
 
+app.post('/progression', function(req, res) {
+  let progression = req.body;
+  let {chords, name, date} = progression;
+  let length = progression.chords.length;
+
+  mongo.save(chords, name, length, date);
+
+  res.status(201).send();
 })
 
 app.listen(3000, function() {

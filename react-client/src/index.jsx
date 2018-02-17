@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import Guitar from '../src/components/Guitar.jsx';
 import ChordForm from '../src/components/ChordForm.jsx';
+import Progression from '../src/components/Progression.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -122,14 +123,77 @@ class App extends React.Component {
           replacement[`string${i}`].fret = note;
         }
         this.setState(replacement);
+        setTimeout(() => {
+          this.getChordName();
+        }, 500)
       }
+    })
+  }
+
+  createProgression() {
+    this.setState({
+      progression: []
+    })
+  }
+
+  saveProgression() {
+    let data = {
+      chords: this.state.progression,
+      name: $('#progressionName').val(),
+      date: new Date()
+    }
+    $.ajax({
+      method: 'POST',
+      url: '/progression',
+      contentType: 'application/json',
+      data: JSON.stringify(data),
+      success: (data) => {
+        alert('Progression successfully saved!');
+      }
+    })
+  }
+
+  addToProgression() {
+    let name = $('#chordName').html();
+    let fingering = '';
+    let index = 1;
+    while (index < 7) {
+      fingering += this.state[`string${index}`].fret;
+      index++;
+    };
+    if (!Array.isArray(this.state.progression)) {
+      this.setState({
+        progression: [{name: name, fingering: fingering}]
+      })
+    } else {
+      this.setState({
+        progression: this.state.progression.concat({name: name, fingering: fingering})
+      })
+    }
+  }
+
+  removeFromProgression() {
+    let replacement = this.state.progression.slice();
+    if (replacement.length > 0) {
+      replacement.pop();
+    }
+    this.setState({
+      progression: replacement
+    })
+  }
+
+  startOver() {
+    this.setState({
+      progression: []
     })
   }
 
   render () {
     return (<div>
       <h1>Guitar Chord Finder</h1>
-      <button className="btn btn-info" onClick={this.getChordName.bind(this)}>Get Chord Name</button>
+      <button onClick={this.getChordName.bind(this)}>Get Chord Name</button>
+      <button onClick={this.createProgression.bind(this)}>Create A New Progression</button>
+      <button onClick={this.saveProgression.bind(this)}>Save Progression</button>
       <h3>Chord Name: <span id='chordName'>Em7add4</span></h3>
       <div>
         <Guitar
@@ -139,6 +203,13 @@ class App extends React.Component {
       </div>
       <div>
         <ChordForm getFingering={this.getFingering.bind(this)} chord={this.state}/>
+      </div>
+      <div>
+        <Progression
+          removeFromProgression={this.removeFromProgression.bind(this)}
+          addToProgression={this.addToProgression.bind(this)}
+          startOver={this.startOver.bind(this)}
+        />
       </div>
     </div>)
   }

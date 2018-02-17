@@ -60,7 +60,7 @@ const ChordForm = ({chord, getFingering}) => (
         <option value="sus4">sus4</option>
       </select>
       <h4 style={styles.h4}>Other:</h4>
-      <input type="text" placeholder="other" style={{"maxWidth": "100px"}}></input>
+      <input type="text" placeholder="Other" style={{"maxWidth": "100px"}}></input>
     </div>
     <div style={styles.row, {'paddingBottom':'20px'}}>
       <button onClick={getFingering.bind(this)}>Get Chord Fingering</button>

@@ -18,7 +18,6 @@ const String = ({setFret, toggleMute, name, fret, muted}) => (
     >X</button>
     {fretNumbers.map(fretNumber => {
       const selected = fret === fretNumber;
-      console.log(fret, fretNumber);
       return <Fret
         setFret={setFret}
         key={fretNumber}
