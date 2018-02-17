@@ -6,8 +6,15 @@ class ChordForm extends React.Component {
     super(props);
   }
 
-  submit() {
-    submission = `${$('form')}`;
+  search(e) {
+    e.preventDefault();
+    let note = $('select[name=notes]').val();
+    let accidental = $('select[name=accidentals]').val();
+    let altered = $('select[name=altered]').val();
+    let seventh = $('select[name=7th]').val();
+    let sus = $('select[name=suspensions]').val();
+    let extra = $('input[type=text]').val();
+    console.log(`${note}${accidental}${altered}${seventh}${sus}${extra}`)
   }
 
   render() {
@@ -41,6 +48,7 @@ class ChordForm extends React.Component {
           </select>
           <h4 style={styles.h4}>Accidental:</h4>
           <select name="accidentals">
+            <option value=''></option>
             <option value="#">#</option>
             <option value="b">b</option>
           </select>
@@ -48,11 +56,13 @@ class ChordForm extends React.Component {
         <div style={styles.row}>
           <h4 style={styles.h4}>Aug/Dim:</h4>
           <select name="altered">
+            <option value=''></option>
             <option value="aug">aug</option>
             <option value="dim">dim</option>
           </select>
           <h4 style={styles.h4}>7th:</h4>
           <select name="7th">
+            <option value=''></option>
             <option value="7">7</option>
             <option value="min7">min7</option>
             <option value="maj7">maj7</option>
@@ -61,6 +71,7 @@ class ChordForm extends React.Component {
         <div style={styles.row}>
           <h4 style={styles.h4}>Sus:</h4>
           <select name="suspensions">
+            <option value=''></option>
             <option value="sus2">sus2</option>
             <option value="sus4">sus4</option>
           </select>
@@ -68,7 +79,7 @@ class ChordForm extends React.Component {
           <input type="text" placeholder="other" style={{"maxWidth": "100px"}}></input>
         </div>
         <div style={styles.row, {'paddingBottom':'20px'}}>
-          <button>Submit</button>
+          <button onClick={this.search}>Get Chord Fingering</button>
         </div>
       </form>
     )
