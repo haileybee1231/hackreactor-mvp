@@ -75,7 +75,7 @@ class App extends React.Component {
 
     $.ajax({
       method: 'GET',
-      url: `/fingering/?query=${chord}`,
+      url: `/name/?query=${chord}`,
       success: (data) => {
         let results = {};
         JSON.parse(data).objects.forEach(result => {
@@ -96,6 +96,9 @@ class App extends React.Component {
     e.preventDefault();
     let note = $('select[name=notes]').val();
     let accidental = $('select[name=accidentals]').val();
+    if (accidental === '#') {
+      accidental = encodeURIComponent(accidental);
+    }
     let altered = $('select[name=altered]').val();
     let seventh = $('select[name=7th]').val();
     let sus = $('select[name=suspensions]').val();
@@ -104,7 +107,7 @@ class App extends React.Component {
 
     $.ajax({
       method: 'GET',
-      url: `/name/?query=${query}`,
+      url: `/fingering/?query=${query}`,
       success: (data) => {
         let results = {};
         JSON.parse(data).objects.forEach(result => {
@@ -122,7 +125,7 @@ class App extends React.Component {
         for (let i = 1; i < 7; i++) {
           let note = fingering[i - 1];
           if (!isNaN(note)) {
-            note = +note + bar;
+            bar ? note = +note + bar : note = +note;
           }
           replacement[`string${i}`].fret = note;
         }

@@ -6,7 +6,7 @@ const Guitar = (props) => (
     {Object.keys(props.chord).map((key, index) => (
       <div style={{'clear':'both'}} key={index}>
         <String
-          muted={props.chord[key].muted}
+          muted={props.chord[key].fret === 'x' ? true : false}
           setFret={props.setFret}
           toggleMute={props.toggleMute}
           name={key}
