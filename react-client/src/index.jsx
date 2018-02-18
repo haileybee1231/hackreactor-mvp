@@ -113,12 +113,16 @@ class App extends React.Component {
           }
         })
         let fingering = results.code;
+        let bar;
+        if (fingering.length > 6) {
+          bar = +fingering.slice(-1) - 1;
+        }
 
         const replacement = this.state;
         for (let i = 1; i < 7; i++) {
           let note = fingering[i - 1];
           if (!isNaN(note)) {
-            note = +note;
+            note = +note + bar;
           }
           replacement[`string${i}`].fret = note;
         }
@@ -206,6 +210,7 @@ class App extends React.Component {
       </div>
       <div>
         <Progression
+          progression={this.state.progression}
           removeFromProgression={this.removeFromProgression.bind(this)}
           addToProgression={this.addToProgression.bind(this)}
           startOver={this.startOver.bind(this)}
