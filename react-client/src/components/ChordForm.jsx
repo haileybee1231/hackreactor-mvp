@@ -2,22 +2,26 @@ import React from 'react';
 import $ from 'jquery';
 
 const styles = {
+  form: {
+    'borderRadius': '15px',
+    'backgroundColor': '#F7F5E6',
+    'margin': 'auto',
+    'marginTop': '30px',
+    'border': '1px solid black',
+    'textAlign':'center',
+    'width': '50%',
+    'maxWidth' :'400px'
+  },
   h4: {
     'display': 'inline',
     'padding': '10px'
   },
   row: {
     'margin': '20px',
-  },
-  form: {
-    'marginTop': '30px',
-    'border': '1px solid black',
-    'textAlign':'center',
-    'width': '55%'
   }
 }
 
-const ChordForm = ({chord, getFingering}) => (
+const ChordForm = ({chord, fingeringChart}) => (
   <form style={styles.form}>
     <div style={styles.row}>
       <h4 style={styles.h4}>Pick A Note:</h4>
@@ -63,7 +67,7 @@ const ChordForm = ({chord, getFingering}) => (
       <input type="text" placeholder="Other" style={{"maxWidth": "100px"}}></input>
     </div>
     <div style={styles.row, {'paddingBottom':'20px'}}>
-      <button onClick={getFingering.bind(this)}>Get Chord Fingering</button>
+      <button onClick={fingeringChart.bind(this)}>Get Chord Fingering</button>
     </div>
   </form>
 )

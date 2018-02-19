@@ -3,20 +3,20 @@ import React from 'react';
 const styles = {
   fret: {
     position: 'relative',
-    float: 'left',
+    float: 'left'
   },
   horizontal: {
-    width: '25px'
+    width: '3vmin'
   },
   vertical: {
-    width: '25px',
+    width: '3vmin',
   },
   dot: {
     position: 'relative',
-    left: '-20px',
-    top: '-5px',
-    marginRight: '-15px',
-    height: '15px',
+    left: '-2.5vmin',
+    top: '-.5vmin',
+    marginRight: '-2vmin',
+    height: '2vmin',
     display: 'inline'
   }
 }

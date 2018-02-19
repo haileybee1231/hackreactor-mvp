@@ -9,6 +9,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      chord: {
         string6: {
           name: 'e',
           fret: 'o',
@@ -39,37 +40,41 @@ class App extends React.Component {
           fret: 'o',
           muted: false
         }
+      },
+      progression: []
     }
   }
 
   setFret(selectedFret, selectedString) {
-    const replacement = this.state[selectedString];
-    if (!replacement.muted) {
-      replacement.fret = replacement.fret === selectedFret ? 'o' : selectedFret;
+    const replacement = this.state.chord;
+    let string = replacement[selectedString]
+    if (!string.muted) {
+      string.fret = string.fret === selectedFret ? 'o' : selectedFret;
 
       this.setState({
-        [selectedString]: replacement
+        chord: replacement
       });
     }
   }
 
   toggleMute(selectedString) {
-    const replacement = this.state[selectedString];
-    let muted = replacement.muted;
+    const replacement = this.state.chord;
+    let string = replacement[selectedString]
+    let muted = string.muted;
 
-    replacement.fret = muted ? 'o' : 'x';
-    replacement.muted = !muted;
+    string.fret = muted ? 'o' : 'x';
+    string.muted = !muted;
 
     this.setState({
-      [selectedString]: replacement
+      chord: replacement
     });
   }
 
-  getChordName() {
+  getChordName(callback) {
     let chord = '';
     let index = 1;
     while (index < 7) {
-      chord += this.state[`string${index}`].fret;
+      chord += this.state.chord[`string${index}`].fret;
       index++;
     }
 
@@ -88,11 +93,12 @@ class App extends React.Component {
         } else {
           $('#chordName').html('Chord not in library, or API query limit reached =,( Try another chord or try again later.');
         }
+        callback ? callback() : null;
       }
     })
   }
 
-  getFingering(e) {
+  fingeringChart(e) {
     e.preventDefault();
     let note = $('select[name=notes]').val();
     let accidental = $('select[name=accidentals]').val();
@@ -105,6 +111,10 @@ class App extends React.Component {
     let extra = $('input[type=text]').val();
     let query = `${note}${accidental}${altered}${seventh}${sus}${extra}`;
 
+    this.getFingering(query);
+  }
+
+  getFingering(query) {
     $.ajax({
       method: 'GET',
       url: `/fingering/?query=${query}`,
@@ -121,7 +131,7 @@ class App extends React.Component {
           bar = +fingering.slice(-1) - 1;
         }
 
-        const replacement = this.state;
+        const replacement = this.state.chord;
         for (let i = 1; i < 7; i++) {
           let note = fingering[i - 1];
           if (!isNaN(note)) {
@@ -129,7 +139,9 @@ class App extends React.Component {
           }
           replacement[`string${i}`].fret = note;
         }
-        this.setState(replacement);
+        this.setState({
+          chord: replacement
+        });
         setTimeout(() => {
           this.getChordName();
         }, 500)
@@ -137,46 +149,90 @@ class App extends React.Component {
     })
   }
 
-  createProgression() {
-    this.setState({
-      progression: []
-    })
+  showChord(e) {
+    e.preventDefault();
+    this.getFingering($(e.target).html())
   }
 
   saveProgression() {
-    let data = {
-      chords: this.state.progression,
-      name: $('#progressionName').val(),
-      date: new Date()
+    if ($('#progressionName').val() && this.state.progression.length > 0) {
+      let data = {
+        chords: this.state.progression,
+        name: $('#progressionName').val(),
+        date: new Date()
+      }
+      $.ajax({
+        method: 'POST',
+        url: '/progression',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: (message) => {
+          alert(message);
+        }
+      })
+    } else if ($('#progressionName').val()) {
+      alert('Please enter chords in your progression!');
+    } else {
+      alert('Please enter a name for your progression!');
     }
+  }
+
+  retrieveProgression() {
+    let name = $('#progressionName').val();
+    if (name) {
+      let data = {
+        name: name
+      }
+      $.ajax({
+        method: 'GET',
+        url: '/progression',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: (data) => {
+          alert(`Progression ${name} successfully retrieved!`);
+          this.setState({
+            progression: JSON.parse(data)[0].chords
+          })
+        },
+        fail: (data) => {
+          alert(data);
+        }
+      })
+    } else {
+      alert('Please enter a name to search and try again.')
+    }
+  }
+
+  deleteProgression() {
+    let name = $('#progressionName').val();
+    let data = {name: name};
     $.ajax({
-      method: 'POST',
+      type: 'DELETE',
       url: '/progression',
       contentType: 'application/json',
       data: JSON.stringify(data),
-      success: (data) => {
-        alert('Progression successfully saved!');
+      success: (message) => {
+        alert(message)
+      },
+      fail: (message) => {
+        alert(message)
       }
     })
   }
 
   addToProgression() {
-    let name = $('#chordName').html();
-    let fingering = '';
-    let index = 1;
-    while (index < 7) {
-      fingering += this.state[`string${index}`].fret;
-      index++;
-    };
-    if (!Array.isArray(this.state.progression)) {
-      this.setState({
-        progression: [{name: name, fingering: fingering}]
-      })
-    } else {
+    this.getChordName(() => {
+      let name = $('#chordName').html();
+      let fingering = '';
+      let index = 1;
+      while (index < 7) {
+        fingering += this.state.chord[`string${index}`].fret;
+        index++;
+      };
       this.setState({
         progression: this.state.progression.concat({name: name, fingering: fingering})
       })
-    }
+    })
   }
 
   removeFromProgression() {
@@ -196,27 +252,46 @@ class App extends React.Component {
   }
 
   render () {
-    return (<div>
-      <h1>Guitar Chord Finder</h1>
-      <button onClick={this.getChordName.bind(this)}>Get Chord Name</button>
-      <button onClick={this.createProgression.bind(this)}>Create A New Progression</button>
-      <button onClick={this.saveProgression.bind(this)}>Save Progression</button>
+    const styles ={
+      app: {
+        'textAlign': 'center',
+        'border': '1px solid black',
+        'margin': 'auto',
+        'borderRadius': '20px',
+        'backgroundColor': '#F7F5E6',
+        'padding': '10px'
+      },
+      button: {
+        'margin': '20px auto',
+        'borderRadius': '12px',
+        'fontSize': '30px',
+        'padding': '5px'
+      }
+    }
+    return (<div style={styles.app}>
+      <h1>Guitar Chord Finder and Progression Builder</h1>
       <h3>Chord Name: <span id='chordName'>Em7add4</span></h3>
+      <button style={styles.button} onClick={this.getChordName.bind(this)}>Update Chord Name</button>
       <div>
         <Guitar
           setFret={this.setFret.bind(this)}
-          chord={this.state}
+          chord={this.state.chord}
           toggleMute={this.toggleMute.bind(this)}/>
       </div>
       <div>
-        <ChordForm getFingering={this.getFingering.bind(this)} chord={this.state}/>
+        <ChordForm fingeringChart={this.fingeringChart.bind(this)} chord={this.state.chord}/>
       </div>
       <div>
         <Progression
           progression={this.state.progression}
+          saveProgression={this.saveProgression.bind(this)}
+          retrieveProgression={this.retrieveProgression.bind(this)}
+          deleteProgression={this.deleteProgression.bind(this)}
           removeFromProgression={this.removeFromProgression.bind(this)}
           addToProgression={this.addToProgression.bind(this)}
           startOver={this.startOver.bind(this)}
+          getChordName={this.getChordName.bind(this)}
+          showChord={this.showChord.bind(this)}
         />
       </div>
     </div>)

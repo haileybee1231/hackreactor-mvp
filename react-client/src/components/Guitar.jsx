@@ -1,10 +1,25 @@
 import React from 'react';
 import String from '../components/String.jsx';
 
+const styles = {
+  guitar: {
+    'padding': '10px',
+    'border': '1px solid black',
+    'backgroundColor': '#553419',
+    'maxWidth': '900px',
+    'margin': 'auto'
+  },
+  string: {
+    'clear': 'both',
+    'display': 'flex',
+    'alignContent': 'center',
+  }
+}
+
 const Guitar = (props) => (
-  <div>
+  <div style={styles.guitar}>
     {Object.keys(props.chord).map((key, index) => (
-      <div style={{'clear':'both'}} key={index}>
+      <div style={styles.string} key={index}>
         <String
           muted={props.chord[key].fret === 'x' ? true : false}
           setFret={props.setFret}
