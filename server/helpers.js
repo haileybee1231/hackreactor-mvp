@@ -1,6 +1,6 @@
 const bodyParser = require('body-parser');
 const request = require('request');
-const config = require('../config.js');
+const config = require('config.js');
 
 const fetchChord = (nameOrFingering, callback) => {
   let destination = `http://api.guitarparty.com/v2/chords/?query=${nameOrFingering}`;
