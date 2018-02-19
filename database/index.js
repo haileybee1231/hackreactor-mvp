@@ -15,7 +15,7 @@ let Progression = mongoose.model('Progression', progressionSchema);
 
 let save = (chords, name, length, date) => {
   let progression = new Progression({chords: chords, name: name, length: length, date: date});
-  
+
   progression.save(err => {
     if (err) {
       console.error('Dabatase error: ', err);
