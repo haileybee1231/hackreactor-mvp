@@ -4,8 +4,8 @@ import String from '../components/String.jsx';
 const styles = {
   guitar: {
     'padding': '10px',
-    'border': '1px solid black',
-    'backgroundColor': '#553419',
+    'border': '2px solid silver',
+    'backgroundColor': '#4f2c15',
     'maxWidth': '900px',
     'margin': 'auto'
   },

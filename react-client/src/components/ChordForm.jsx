@@ -4,10 +4,12 @@ import $ from 'jquery';
 const styles = {
   form: {
     'borderRadius': '15px',
-    'backgroundColor': '#F7F5E6',
+    'backgroundColor': 'black',
+    'boxShadow': '2px 2px 2px 2px black',
+    'color': 'white',
     'margin': 'auto',
     'marginTop': '30px',
-    'border': '1px solid black',
+    'border': '1px solid silver',
     'textAlign':'center',
     'width': '50%',
     'maxWidth' :'400px'
@@ -18,6 +20,17 @@ const styles = {
   },
   row: {
     'margin': '20px',
+  },
+  button: {
+    'backgroundColor': '676361',
+    'color': 'black',
+    'margin': '2px',
+    'borderRadius': '12px',
+    'fontSize': '1em'
+  },
+  input: {
+    'borderRadius': '4px',
+    'padding': '2px'
   }
 }
 
@@ -25,7 +38,7 @@ const ChordForm = ({chord, fingeringChart}) => (
   <form style={styles.form}>
     <div style={styles.row}>
       <h4 style={styles.h4}>Pick A Note:</h4>
-      <select name="notes">
+      <select style={styles.input} name="notes">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
@@ -35,7 +48,7 @@ const ChordForm = ({chord, fingeringChart}) => (
         <option value="G">G</option>
       </select>
       <h4 style={styles.h4}>Accidental:</h4>
-      <select name="accidentals">
+      <select style={styles.input} name="accidentals">
         <option value=''></option>
         <option value="#">#</option>
         <option value="b">b</option>
@@ -43,13 +56,13 @@ const ChordForm = ({chord, fingeringChart}) => (
     </div>
     <div style={styles.row}>
       <h4 style={styles.h4}>Aug/Dim:</h4>
-      <select name="altered">
+      <select style={styles.input} name="altered">
         <option value=''></option>
         <option value="aug">aug</option>
         <option value="dim">dim</option>
       </select>
       <h4 style={styles.h4}>7th:</h4>
-      <select name="7th">
+      <select style={styles.input} name="7th">
         <option value=''></option>
         <option value="7">7</option>
         <option value="min7">min7</option>
@@ -58,7 +71,7 @@ const ChordForm = ({chord, fingeringChart}) => (
     </div>
     <div style={styles.row}>
       <h4 style={styles.h4}>Sus:</h4>
-      <select name="suspensions">
+      <select style={styles.input} name="suspensions">
         <option value=''></option>
         <option value="sus2">sus2</option>
         <option value="sus4">sus4</option>
@@ -67,7 +80,7 @@ const ChordForm = ({chord, fingeringChart}) => (
       <input type="text" placeholder="Other" style={{"maxWidth": "100px"}}></input>
     </div>
     <div style={styles.row, {'paddingBottom':'20px'}}>
-      <button onClick={fingeringChart.bind(this)}>Get Chord Fingering</button>
+      <button style={styles.button} onClick={fingeringChart.bind(this)}>Get Chord Fingering</button>
     </div>
   </form>
 )

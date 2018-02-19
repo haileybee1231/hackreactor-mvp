@@ -1,7 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var fetcher = require('./helpers.js');
-var mongo = require('../database/index.js')
+var mongo = require('../database/index.js');
 
 
 var app = express();

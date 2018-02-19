@@ -3,9 +3,11 @@ import ProgressionChord from './ProgressionChord.jsx';
 
 const styles = {
   box: {
-    'backgroundColor': '#F7F5E6',
+    'backgroundColor': 'black',
+    'boxShadow': '2px 2px 2px 2px black',
+    'color': 'white',
     'margin': '30px auto',
-    'border': '1px solid black',
+    'border': '1px solid silver',
     'borderRadius': '15px',
     'textAlign':'center',
     'width': '55%',
@@ -20,7 +22,7 @@ const styles = {
     'margin': '20px',
   },
   chordBox: {
-    'backgroundColor': '#E8E8E8',
+    'backgroundColor':'#D9D8D8',
     'width': '90%',
     'border': '1px solid black',
     'textAlign':'center',
@@ -30,6 +32,17 @@ const styles = {
     'display': 'flex',
     'overflow': 'auto',
     'flexWrap': 'wrap'
+  },
+  button: {
+    'backgroundColor': '676361',
+    'color': 'black',
+    'margin': '2px',
+    'borderRadius': '12px',
+    'fontSize': '1em'
+  },
+  input: {
+    'borderRadius': '9px',
+    'padding': '4px'
   }
 }
 
@@ -37,17 +50,17 @@ const Progression = ({addToProgression, removeFromProgression, retrieveProgressi
   <div style={styles.box}>
     <div style={styles.row}>
       <h4 style={styles.h4}>Build A Progression:</h4>
-      <input id="progressionName" type="text" placeholder="Add name here"></input>
+      <input style={styles.input} id="progressionName" type="text" placeholder="Add name here"></input>
     </div>
     <div>
-      <button onClick={saveProgression}>Save Progression</button>
-      <button onClick={retrieveProgression}>Retrieve Progression</button>
-      <button onClick={deleteProgression}>Delete Progression</button>
+      <button style={styles.button} onClick={saveProgression}>Save Progression</button>
+    <button style={styles.button} onClick={retrieveProgression}>Retrieve Progression</button>
+  <button style={styles.button} onClick={deleteProgression}>Delete Progression</button>
     </div>
     <div style={styles.row}>
-      <button onClick={addToProgression}>Add Current Chord</button>
-      <button onClick={removeFromProgression}>Remove Last Chord</button>
-      <button onClick={startOver}>Start Over</button>
+      <button style={styles.button} onClick={addToProgression}>Add Current Chord</button>
+    <button style={styles.button} onClick={removeFromProgression}>Remove Last Chord</button>
+  <button style={styles.button} onClick={startOver}>Start Over</button>
     </div>
     <div style={styles.chordBox}>
       {progression &&

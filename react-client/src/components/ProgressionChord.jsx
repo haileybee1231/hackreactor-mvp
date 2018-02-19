@@ -18,6 +18,7 @@ class ProgressionChord extends React.Component {
   render() {
     const styles = {
       chord: {
+        'color': 'black',
         'float': 'left',
         'fontSize': '2vmin',
         'padding': '10px',

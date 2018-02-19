@@ -254,22 +254,32 @@ class App extends React.Component {
   render () {
     const styles ={
       app: {
+        'backgroundColor': '#676361',
+        'color': 'white',
+        'fontFamily': 'sans-serif',
         'textAlign': 'center',
         'border': '1px solid black',
         'margin': 'auto',
         'borderRadius': '20px',
-        'backgroundColor': '#F7F5E6',
         'padding': '10px'
       },
       button: {
+        'backgroundColor': 'black',
+        'color': 'white',
         'margin': '20px auto',
         'borderRadius': '12px',
         'fontSize': '30px',
         'padding': '5px'
+      },
+      logo: {
+        'width': '400px'
       }
     }
     return (<div style={styles.app}>
-      <h1>Guitar Chord Finder and Progression Builder</h1>
+      <div>
+        <img style={styles.logo} src={'https://i.imgur.com/1IkSJLF.png'} alt="logo"/>
+        <h2>Chord Finder and Progression Builder</h2>
+      </div>
       <h3>Chord Name: <span id='chordName'>Em7add4</span></h3>
       <button style={styles.button} onClick={this.getChordName.bind(this)}>Update Chord Name</button>
       <div>
