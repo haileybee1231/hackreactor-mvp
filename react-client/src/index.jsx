@@ -151,7 +151,9 @@ class App extends React.Component {
 
   showChord(e) {
     e.preventDefault();
-    this.getFingering($(e.target).html())
+    let str = $(e.target).html().slice(-26);
+    str = str.slice(0, 6);
+    this.getFingering(str);
   }
 
   saveProgression() {
