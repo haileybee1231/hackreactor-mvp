@@ -256,14 +256,8 @@ class App extends React.Component {
   render () {
     const styles ={
       app: {
-        'backgroundColor': '#676361',
-        'color': 'white',
         'fontFamily': 'sans-serif',
         'textAlign': 'center',
-        'border': '1px solid black',
-        'margin': 'auto',
-        'borderRadius': '20px',
-        'padding': '10px'
       },
       button: {
         'backgroundColor': 'black',
@@ -282,7 +276,7 @@ class App extends React.Component {
         <img style={styles.logo} src={'https://i.imgur.com/1IkSJLF.png'} alt="logo"/>
         <h2>Chord Finder and Progression Builder</h2>
       </div>
-      <h3>Chord Name: <span id='chordName'>Em7add4</span></h3>
+      <h3>Current Chord Name: <span id='chordName'>Em7add4</span></h3>
       <button style={styles.button} onClick={this.getChordName.bind(this)}>Update Chord Name</button>
       <div>
         <Guitar

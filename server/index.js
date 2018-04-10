@@ -11,17 +11,42 @@ app.use(bodyParser.json());
 
 app.get('/fingering*', function(req, res) {
   let query = req.url.slice(18);
-
-  fetcher.fetchChord(query, (data) => {
-    res.status(200).send(data);
+  mongo.chord.find({name: query}).exec((err, result) => {
+    if (err) {
+      console.error(err);
+    } else if (result.length) {
+      let retrieved = {
+        objects: [{name: result[0].name, code: result[0].fingering}]
+      }
+      res.status(200).send(JSON.stringify(retrieved));
+    } else {
+      fetcher.fetchChord(query, (data) => {
+        let chord = JSON.parse(data).objects[0];
+        mongo.saveChord(chord.name, chord.code);
+        res.status(200).send(data);
+      });
+    }
   });
 })
 
 app.get('/name*', function(req, res) {
   let query = req.url.slice(13);
 
-  fetcher.fetchChord(query, (data) => {
-    res.status(200).send(data);
+  mongo.chord.find({fingering: query}).exec((err, result) => {
+    if (err) {
+      console.error(err);
+    } else if (result.length) {
+      let retrieved = {
+        objects: [{name: result[0].name, code: result[0].fingering}]
+      }
+      res.status(200).send(JSON.stringify(retrieved));
+    } else {
+      fetcher.fetchChord(query, (data) => {
+        let chord = JSON.parse(data).objects[0];
+        mongo.saveChord(chord.name, chord.code);
+        res.status(200).send(data);
+      });
+    }
   });
 })
 
@@ -31,14 +56,13 @@ app.post('/progression', function(req, res) {
   let length = progression.chords.length;
 
   mongo.progression.find({name: name}).exec((err, result) => {
-    console.log(result)
     if (err) {
       console.error('Error finding progression: ', err);
     } else if (result.length !== 0) {
       console.log('Name in request is already used.')
       res.status(201).send('That name is already taken, please choose another.')
     } else {
-      mongo.save(chords, name, length, date);
+      mongo.saveProgression(chords, name, length, date);
       console.log(`Progression ${name} successfully added to database.`)
 
       res.status(201).send('Progression successfully added to database.');

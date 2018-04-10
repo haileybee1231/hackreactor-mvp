@@ -28,7 +28,7 @@ const String = ({setFret, toggleMute, name, fret, muted}) => (
     <button
       onClick={() => toggleMute(name)}
       style={muted ? styles.muted : null}
-      >X</button>
+    >X</button>
   </div>
 )
 

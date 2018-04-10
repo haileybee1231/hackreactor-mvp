@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 mongoose.connect(process.env.MONGODB || 'mongodb://localhost/chordfinder');
 
-let progressionSchema = mongoose.Schema({
+const progressionSchema = mongoose.Schema({
   chords: [{
     name: String,
     fingering: String
@@ -11,9 +11,15 @@ let progressionSchema = mongoose.Schema({
   date: Date
 });
 
-let Progression = mongoose.model('Progression', progressionSchema);
+const chordSchema = mongoose.Schema({
+  name: String,
+  fingering: String
+});
 
-let save = (chords, name, length, date) => {
+const Progression = mongoose.model('Progression', progressionSchema);
+const Chord = mongoose.model('Chord', chordSchema);
+
+const saveProgression = (chords, name, length, date) => {
   let progression = new Progression({chords: chords, name: name, length: length, date: date});
 
   progression.save(err => {
@@ -25,5 +31,19 @@ let save = (chords, name, length, date) => {
   })
 }
 
-module.exports.save = save;
+const saveChord = (name, fingering) => {
+  let chord = new Chord({name: name, fingering: fingering});
+
+  chord.save(err => {
+    if (err) {
+      console.error('Database error: ', err);
+    } else {
+      console.log(`${name} successfully added to chord database.`);
+    }
+  })
+}
+
+module.exports.saveProgression = saveProgression;
+module.exports.saveChord = saveChord;
 module.exports.progression = Progression;
+module.exports.chord = Chord;
