@@ -22,7 +22,7 @@ const styles = {
     'margin': '20px',
   },
   button: {
-    'backgroundColor': '676361',
+    'backgroundColor': '#676361',
     'color': 'black',
     'margin': '2px',
     'borderRadius': '12px',
