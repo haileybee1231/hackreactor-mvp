@@ -115,10 +115,11 @@ class App extends React.Component {
       accidental = encodeURIComponent(accidental);
     }
     let altered = $('select[name=altered]').val();
+    let major = $('select[name=major]').val();
     let seventh = $('select[name=7th]').val();
     let sus = $('select[name=suspensions]').val();
     let extra = $('input[type=text]').val();
-    let query = `${note}${accidental}${altered}${seventh}${sus}${extra}`;
+    let query = `${note}${accidental}${major}${altered}${seventh}${sus}${extra}`;
 
     this.getFingering(query);
   }

@@ -11,7 +11,9 @@ app.use(bodyParser.json());
 
 app.get('/fingering*', function(req, res) {
   let query = decodeURIComponent(req.url.slice(18));
+  console.log(query);
   mongo.chord.find({name: query}).exec((err, result) => {
+    console.log(result);
     if (err) {
       console.error(err);
     } else if (result.length) {
@@ -22,7 +24,9 @@ app.get('/fingering*', function(req, res) {
     } else {
       fetcher.fetchChord(query, (data) => {
         let chord = JSON.parse(data).objects[0];
-        mongo.saveChord(chord.name, chord.code);
+        if (!mongo.chord.find({name: chord.name})) {
+          mongo.saveChord(chord.name, chord.code);
+        }
         res.status(200).send(data);
       });
     }

@@ -61,6 +61,12 @@ const ChordForm = ({chord, fingeringChart}) => (
         <option value="aug">aug</option>
         <option value="dim">dim</option>
       </select>
+      <h4 style={styles.h4}>maj/m</h4>
+      <select style={styles.input} name="major">
+        <option value=''></option>
+        <option value="maj">maj</option>
+        <option value="m">m</option>
+      </select>
       <h4 style={styles.h4}>7th:</h4>
       <select style={styles.input} name="7th">
         <option value=''></option>
