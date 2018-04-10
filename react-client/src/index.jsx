@@ -41,7 +41,8 @@ class App extends React.Component {
           muted: false
         }
       },
-      progression: []
+      progression: [],
+      bar: 0
     }
   }
 
@@ -76,6 +77,14 @@ class App extends React.Component {
     while (index < 7) {
       chord += this.state.chord[`string${index}`].fret;
       index++;
+    }
+    if (this.state.bar > 0) {
+      for (let i = 0; i < chord.length; i++) {
+        if (!isNaN(Number(chord[i]))) {
+          chord = chord.slice(0, i) + (chord[i] - this.state.bar + 1) + chord.slice(i + 1, chord.length);
+        }
+      }
+      chord += `_${this.state.bar}`;
     }
 
     $.ajax({
@@ -129,6 +138,13 @@ class App extends React.Component {
         let bar;
         if (fingering.length > 6) {
           bar = +fingering.slice(-1) - 1;
+          this.setState({
+            bar: bar + 1
+          });
+        } else {
+          this.setState({
+            bar: 0
+          })
         }
 
         const replacement = this.state.chord;

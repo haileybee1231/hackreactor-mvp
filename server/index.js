@@ -87,7 +87,6 @@ app.delete('/progression', function(req, res) {
   let name = req.body.name;
 
   mongo.progression.remove({name: name}).exec((err, result) => {
-    console.log(result);
     if (err) {
       res.send(err);
     } else if (result.n > 0) {
