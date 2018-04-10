@@ -157,10 +157,9 @@ class App extends React.Component {
         }
         this.setState({
           chord: replacement
-        });
-        setTimeout(() => {
+        }, () => {
           this.getChordName();
-        }, 500)
+        })
       }
     })
   }
