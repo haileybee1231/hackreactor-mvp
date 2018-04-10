@@ -10,7 +10,7 @@ app.use(express.static(__dirname + '/../react-client/dist'));
 app.use(bodyParser.json());
 
 app.get('/fingering*', function(req, res) {
-  let query = req.url.slice(18);
+  let query = decodeURIComponent(req.url.slice(18));
   mongo.chord.find({name: query}).exec((err, result) => {
     if (err) {
       console.error(err);
@@ -31,7 +31,7 @@ app.get('/fingering*', function(req, res) {
 
 app.get('/name*', function(req, res) {
   let query = req.url.slice(13);
-
+  console.log('query', query);
   mongo.chord.find({fingering: query}).exec((err, result) => {
     if (err) {
       console.error(err);
@@ -42,6 +42,7 @@ app.get('/name*', function(req, res) {
       res.status(200).send(JSON.stringify(retrieved));
     } else {
       fetcher.fetchChord(query, (data) => {
+        console.log(data);
         let chord = JSON.parse(data).objects[0];
         mongo.saveChord(chord.name, chord.code);
         res.status(200).send(data);

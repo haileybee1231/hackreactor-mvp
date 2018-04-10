@@ -75,7 +75,7 @@ class App extends React.Component {
     let chord = '';
     let index = 1;
     while (index < 7) {
-      chord += this.state.chord[`string${index}`].fret;
+      this.state.chord[`string${index}`].fret ? chord += this.state.chord[`string${index}`].fret : null;
       index++;
     }
     if (this.state.bar > 0) {
@@ -280,7 +280,8 @@ class App extends React.Component {
         'margin': '20px auto',
         'borderRadius': '12px',
         'fontSize': '30px',
-        'padding': '5px'
+        'padding': '15px',
+        'cursor': 'pointer'
       },
       logo: {
         'width': '400px'
