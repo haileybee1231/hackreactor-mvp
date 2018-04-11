@@ -71,8 +71,6 @@ const ChordForm = ({chord, fingeringChart}) => (
       <select style={styles.input} name="7th">
         <option value=''></option>
         <option value="7">7</option>
-        <option value="min7">min7</option>
-        <option value="maj7">maj7</option>
       </select>
     </div>
     <div style={styles.row}>

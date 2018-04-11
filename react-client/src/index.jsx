@@ -46,6 +46,20 @@ class App extends React.Component {
     }
   }
 
+  componentWillMount() {
+    $.ajax({
+      type: 'GET',
+      url: '/persist',
+      success: data => {
+        if (data.length) {
+          this.setState({
+            username: data[0].username
+          })
+        }
+      }
+    })
+  }
+
   setFret(selectedFret, selectedString) {
     const replacement = this.state.chord;
     let string = replacement[selectedString]
@@ -269,6 +283,64 @@ class App extends React.Component {
     })
   }
 
+  login() {
+    let username = prompt('Please enter your username');
+    let password = prompt('Please enter your password.');
+
+    $.ajax({
+      method: 'POST',
+      url: '/login',
+      contentType: 'application/json',
+      data: JSON.stringify({username: username, password: password}),
+      success: (data) => {
+        this.setState({username: username});
+        alert('Logged in!');
+      },
+      fail: (data) => {
+        alert(data);
+      }
+    })
+  }
+  
+  signup() {
+    let username = prompt('Please enter a username');
+    let password = prompt('Please enter a password.');
+
+    $.ajax({
+      method: 'POST',
+      url: '/signup',
+      contentType: 'application/json',
+      data: JSON.stringify({username: username, password: password}),
+      success: (data) => {
+        console.log(data);
+        this.setState({username: username});
+        alert('Successfully signed in!');
+      },
+      statusCode: {
+        500: () => {
+          alert('That username is taken.')
+        }
+      },
+      failure: (data) => {
+        alert('aaaah');
+      }
+    })
+  }
+
+  logout() {
+    $.ajax({
+      method: 'POST',
+      url: '/logout',
+      success: () => {
+        this.setState({username: null});
+        alert('Successfully logged out!')
+      },
+      failure: () => {
+        alert('There was a problem logging you out.')
+      }
+    })
+  }
+
   render () {
     const styles ={
       app: {
@@ -296,6 +368,10 @@ class App extends React.Component {
       <h3>Current Chord Name: <span id='chordName'>Em7add4</span></h3>
       <button style={styles.button} onClick={this.getChordName.bind(this)}>Update Chord Name</button>
       <div>
+        {this.state.username ? <h2>Hi, {this.state.username}</h2> : null}
+        <button onClick={this.signup.bind(this)}>signup</button>
+        <button onClick={this.login.bind(this)}>login</button>
+        <button onClick={this.logout.bind(this)}>logout</button>
         <Guitar
           setFret={this.setFret.bind(this)}
           chord={this.state.chord}

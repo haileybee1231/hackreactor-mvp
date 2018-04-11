@@ -16,8 +16,14 @@ const chordSchema = mongoose.Schema({
   fingering: String
 });
 
+const userSchema = mongoose.Schema({
+  username: String,
+  password: String
+});
+
 const Progression = mongoose.model('Progression', progressionSchema);
 const Chord = mongoose.model('Chord', chordSchema);
+const User = mongoose.model('User', userSchema);
 
 const saveProgression = (chords, name, length, date) => {
   let progression = new Progression({chords: chords, name: name, length: length, date: date});
@@ -43,7 +49,26 @@ const saveChord = (name, fingering) => {
   })
 }
 
+const addUser = (username, password, cb) => {
+  User.find({username: username}).exec((err, user) => {
+    if (!user.length) {
+      let user = new User({username: username, password: password});
+      user.save(err => {
+        if (err) {
+          cb(err);
+        } else {
+          cb(user);
+        }
+      })
+    } else {
+      cb('User already exists');
+    }
+  });
+}
+
 module.exports.saveProgression = saveProgression;
 module.exports.saveChord = saveChord;
+module.exports.addUser = addUser;
 module.exports.progression = Progression;
 module.exports.chord = Chord;
+module.exports.user = User;
