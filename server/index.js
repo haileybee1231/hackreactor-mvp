@@ -28,9 +28,7 @@ const isLoggedIn = (req, res, next) => {
 
 app.get('/fingering*', function(req, res) {
   let query = decodeURIComponent(req.url.slice(18));
-  console.log(query);
   mongo.chord.find({name: query}).exec((err, result) => {
-    console.log(result);
     if (err) {
       console.error(err);
     } else if (result.length) {

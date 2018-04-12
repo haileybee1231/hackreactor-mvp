@@ -9,7 +9,11 @@ const styles = {
     margin: 'auto'
   },
   muted: {
-    backgroundColor: 'red'
+    backgroundColor: 'red',
+    cursor: 'pointer'
+  },
+  muteButton: {
+    cursor: 'pointer'
   }
 }
 
@@ -27,7 +31,7 @@ const String = ({setFret, toggleMute, name, fret, muted}) => (
     })}
     <button
       onClick={() => toggleMute(name)}
-      style={muted ? styles.muted : null}
+      style={muted ? styles.muted : styles.muteButton}
     >X</button>
   </div>
 )

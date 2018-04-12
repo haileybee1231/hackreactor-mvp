@@ -4,6 +4,9 @@ import $ from 'jquery';
 import Guitar from '../src/components/Guitar.jsx';
 import ChordForm from '../src/components/ChordForm.jsx';
 import Progression from '../src/components/Progression.jsx';
+import Topbar from '../src/components/Topbar.jsx';
+import UserModal from '../src/components/UserModal.jsx';
+import GenericModal from '../src/components/GenericModal.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -42,7 +45,15 @@ class App extends React.Component {
         }
       },
       progression: [],
-      bar: 0
+      bar: 0,
+      userModalOpen: false,
+      modalType: '',
+      username: '',
+      password: '',
+      genericModalOpen: false,
+      genericModalMessage: '',
+      loggedInUser: '',
+      chordName: 'Em7add4'
     }
   }
 
@@ -53,7 +64,7 @@ class App extends React.Component {
       success: data => {
         if (data.length) {
           this.setState({
-            username: data[0].username
+            loggedInUser: data[0].username
           })
         }
       }
@@ -85,7 +96,7 @@ class App extends React.Component {
     });
   }
 
-  getChordName(callback) {
+  getChordName() {
     let chord = '';
     let index = 1;
     while (index < 7) {
@@ -112,11 +123,15 @@ class App extends React.Component {
           }
         })
         if (results.name) {
-          $('#chordName').html(results.name);
+          this.setState({
+            chordName: results.name
+          })
         } else {
+          this.setState({
+            chordName: ''
+          })
           $('#chordName').html('Chord not in library, or API query limit reached =,( Try another chord or try again later.');
         }
-        callback ? callback() : null;
       }
     })
   }
@@ -171,10 +186,9 @@ class App extends React.Component {
           replacement[`string${i}`].fret = note;
         }
         this.setState({
-          chord: replacement
-        }, () => {
-          this.getChordName();
-        })
+          chord: replacement,
+          chordName: results.name
+        });
       }
     })
   }
@@ -199,14 +213,40 @@ class App extends React.Component {
         contentType: 'application/json',
         data: JSON.stringify(data),
         success: (message) => {
-          alert(message);
+          this.setState({
+            genericModalOpen: true,
+            genericModalMessage: message
+          });
+          setTimeout(() => {
+            this.setState({
+              genericModalMessage: '',
+              genericModalOpen: false
+            })
+          }, 1000)
         }
       })
     } else if ($('#progressionName').val()) {
-      alert('Please enter chords in your progression!');
+      this.setState({
+        genericModalOpen: true,
+        genericModalMessage: 'Please enter chords in your progression!'
+      });
+      setTimeout(() => {
+        this.setState({
+          genericModalMessage: '',
+          genericModalOpen: false
+        })
+      }, 1000)
     } else {
-      alert('Please enter a name for your progression!');
-    }
+      this.setState({
+        genericModalOpen: true,
+        genericModalMessage: 'Please enter a name for your progression!'
+      });
+      setTimeout(() => {
+        this.setState({
+          genericModalMessage: '',
+          genericModalOpen: false
+        })
+      }, 1000)    }
   }
 
   retrieveProgression() {
@@ -221,17 +261,43 @@ class App extends React.Component {
         contentType: 'application/json',
         data: JSON.stringify(data),
         success: (data) => {
-          alert(`Progression ${name} successfully retrieved!`);
           this.setState({
+            genericModalOpen: true,
+            genericModalMessage: `Progression ${name} successfully retrieved!`,
             progression: JSON.parse(data)[0].chords
-          })
+          });
+          setTimeout(() => {
+            this.setState({
+              genericModalMessage: '',
+              genericModalOpen: false
+            })
+          }, 1000)
         },
         fail: (data) => {
-          alert(data);
+          this.setState({
+            genericModalOpen: true,
+            genericModalMessage: data,
+            progression: JSON.parse(data)[0].chords
+          });
+          setTimeout(() => {
+            this.setState({
+              genericModalMessage: '',
+              genericModalOpen: false
+            })
+          }, 1000)
         }
       })
     } else {
-      alert('Please enter a name to search and try again.')
+      this.setState({
+        genericModalOpen: true,
+        genericModalMessage: `Please enter a name to search and try again.`
+      });
+      setTimeout(() => {
+        this.setState({
+          genericModalMessage: '',
+          genericModalOpen: false
+        })
+      }, 1000)
     }
   }
 
@@ -244,10 +310,28 @@ class App extends React.Component {
       contentType: 'application/json',
       data: JSON.stringify(data),
       success: (message) => {
-        alert(message)
+        this.setState({
+          genericModalOpen: true,
+          genericModalMessage: message
+        });
+        setTimeout(() => {
+          this.setState({
+            genericModalMessage: '',
+            genericModalOpen: false
+          })
+        }, 1000)
       },
       fail: (message) => {
-        alert(message)
+        this.setState({
+          genericModalOpen: true,
+          genericModalMessage: message
+        });
+        setTimeout(() => {
+          this.setState({
+            genericModalMessage: '',
+            genericModalOpen: false
+          })
+        }, 1000)
       }
     })
   }
@@ -284,46 +368,16 @@ class App extends React.Component {
   }
 
   login() {
-    let username = prompt('Please enter your username');
-    let password = prompt('Please enter your password.');
-
-    $.ajax({
-      method: 'POST',
-      url: '/login',
-      contentType: 'application/json',
-      data: JSON.stringify({username: username, password: password}),
-      success: (data) => {
-        this.setState({username: username});
-        alert('Logged in!');
-      },
-      fail: (data) => {
-        alert(data);
-      }
+    this.setState({
+      userModalOpen: !this.state.userModalOpen,
+      modalType: 'Login'
     })
   }
   
   signup() {
-    let username = prompt('Please enter a username');
-    let password = prompt('Please enter a password.');
-
-    $.ajax({
-      method: 'POST',
-      url: '/signup',
-      contentType: 'application/json',
-      data: JSON.stringify({username: username, password: password}),
-      success: (data) => {
-        console.log(data);
-        this.setState({username: username});
-        alert('Successfully signed in!');
-      },
-      statusCode: {
-        500: () => {
-          alert('That username is taken.')
-        }
-      },
-      failure: (data) => {
-        alert('aaaah');
-      }
+    this.setState({
+      userModalOpen: !this.state.userModalOpen,
+      modalType: 'Signup'
     })
   }
 
@@ -332,12 +386,116 @@ class App extends React.Component {
       method: 'POST',
       url: '/logout',
       success: () => {
-        this.setState({username: null});
-        alert('Successfully logged out!')
+        this.setState({
+          loggedInUser: '',
+          genericModalOpen: true,
+          genericModalMessage: 'Successfully logged out!'
+        });
+        setTimeout(() => {
+          this.setState({
+            genericModalMessage: '',
+            genericModalOpen: false
+          })
+        }, 1000)
       },
-      failure: () => {
-        alert('There was a problem logging you out.')
+      fail: () => {
+        this.setState({
+          genericModalOpen: true,
+          genericModalMessage: 'There was a problem logging you out. Please try again.'
+        });
+        setTimeout(() => {
+          this.setState({
+            genericModalMessage: '',
+            genericModalOpen: false
+          })
+        }, 1000)
       }
+    })
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    let {username, password} = this.state;
+    this.state.modalType === 'Signup' ? 
+      $.ajax({
+        method: 'POST',
+        url: '/signup',
+        contentType: 'application/json',
+        data: JSON.stringify({ username: username, password: password }),
+        success: (data) => {
+          this.setState({ 
+            loggedInUser: username,
+            genericModalOpen: true,
+            genericModalMessage: 'Successfully signed up and logged in!',
+            username: '',
+            password: ''
+          });
+          setTimeout(() => {
+            this.setState({ userModalOpen: false, genericModalOpen: false, genericModalMessage: '' })
+          }, 1000)
+        },
+        statusCode: {
+          500: () => {
+            this.setState({
+              genericModalOpen: true,
+              genericModalMessage: 'That username is taken, please pick another.'
+            });
+            setTimeout(() => {
+              this.setState({
+                genericModalMessage: '',
+                genericModalOpen: false
+              })
+            }, 1000)
+          }
+        },
+        fail: (data) => {
+          this.setState({
+            genericModalOpen: true,
+            genericModalMessage: 'Oops, problem signing up :('
+          });
+          setTimeout(() => {
+            this.setState({
+              genericModalMessage: '',
+              genericModalOpen: false
+            })
+          }, 1000)
+        }
+      }) : 
+      $.ajax({
+        method: 'POST',
+        url: '/login',
+        contentType: 'application/json',
+        data: JSON.stringify({ username: username, password: password }),
+        success: (data) => {
+          this.setState({
+            loggedInUser: username,
+            genericModalOpen: true,
+            genericModalMessage: 'Successfully logged in!',
+            username: '',
+            password: ''
+          });
+          setTimeout(() => {
+            this.setState({ userModalOpen: false, genericModalOpen: false, genericModalMessage: '' })
+          }, 1000)
+        },
+        fail: (data) => {
+          this.setState({
+            genericModalOpen: true,
+            genericModalMessage: 'Oops, problem logging in :('
+          });
+          setTimeout(() => {
+            this.setState({
+              genericModalMessage: '',
+              genericModalOpen: false
+            })
+          }, 1000)
+        }
+      })
+  }
+
+  handleChange(e, name) {
+    this.setState({
+      [name]: e.target.value
     })
   }
 
@@ -361,17 +519,19 @@ class App extends React.Component {
       }
     }
     return (<div style={styles.app}>
-      <div>
+      <Topbar 
+        loggedInUser={this.state.loggedInUser}
+        signup={this.signup.bind(this)}
+        login={this.login.bind(this)}
+        logout={this.logout.bind(this)}
+       />
+      <div style={{paddingTop: '100px'}}>
         <img style={styles.logo} src={'https://i.imgur.com/1IkSJLF.png'} alt="logo"/>
         <h2>Chord Finder and Progression Builder</h2>
       </div>
-      <h3>Current Chord Name: <span id='chordName'>Em7add4</span></h3>
+      <h3>Current Chord Name: <span id='chordName'>{this.state.chordName}</span></h3>
       <button style={styles.button} onClick={this.getChordName.bind(this)}>Update Chord Name</button>
       <div>
-        {this.state.username ? <h2>Hi, {this.state.username}</h2> : null}
-        <button onClick={this.signup.bind(this)}>signup</button>
-        <button onClick={this.login.bind(this)}>login</button>
-        <button onClick={this.logout.bind(this)}>logout</button>
         <Guitar
           setFret={this.setFret.bind(this)}
           chord={this.state.chord}
@@ -393,6 +553,16 @@ class App extends React.Component {
           showChord={this.showChord.bind(this)}
         />
       </div>
+      {this.state.userModalOpen ? 
+      <UserModal 
+        type={this.state.modalType} 
+        username={this.state.username}
+        password={this.state.password}
+        handleChange={this.handleChange.bind(this)}
+        handleSubmit={this.handleSubmit.bind(this)} 
+      /> : null}
+      {this.state.genericModalOpen ? 
+      <GenericModal message={this.state.genericModalMessage}/> : null}
     </div>)
   }
 }

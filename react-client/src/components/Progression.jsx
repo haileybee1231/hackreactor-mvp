@@ -38,7 +38,8 @@ const styles = {
     'color': 'black',
     'margin': '2px',
     'borderRadius': '12px',
-    'fontSize': '1em'
+    'fontSize': '1em',
+    'cursor': 'pointer'
   },
   input: {
     'borderRadius': '9px',
