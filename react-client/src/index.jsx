@@ -154,6 +154,7 @@ class App extends React.Component {
   }
 
   getFingering(query) {
+    console.log(query);
     $.ajax({
       method: 'GET',
       url: `/fingering/?query=${query}`,
