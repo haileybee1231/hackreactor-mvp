@@ -1,3 +1,8 @@
+button:hover {
+    background-color: whitesmoke !important;
+    color: black !important;
+}
+
 button:active {
-    background-color: darkgray;
+    background-color: darkgray !important;
 }

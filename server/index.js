@@ -29,7 +29,6 @@ const isLoggedIn = (req, res, next) => {
 app.get('/fingering*', function(req, res) {
   let query = decodeURIComponent(req.url.slice(18));
   query = query.replace('#', '%23');
-  console.log(query);
   mongo.chord.find({name: query}).exec((err, result) => {
     if (err) {
       console.error(err);
@@ -37,15 +36,20 @@ app.get('/fingering*', function(req, res) {
       let retrieved = {
         objects: [{name: result[0].name, code: result[0].fingering}]
       }
-      res.status(200).send(JSON.stringify(retrieved));
+      res.write(JSON.stringify(retrieved));
+      res.status(200).send()
     } else {
       fetcher.fetchChord(query, (data) => {
-        console.log(query, data);
         let chord = JSON.parse(data).objects[0];
-        if (!mongo.chord.find({name: chord.name})) {
+        if (!chord) {
+          res.status(404).end();
+          return;
+        } else if (!mongo.chord.find({name: chord.name})) {
           mongo.saveChord(chord.name, chord.code);
         }
-        res.status(200).send(data);
+        if (chord) {
+          res.status(200).send(data);
+        } 
       });
     }
   });
@@ -53,7 +57,7 @@ app.get('/fingering*', function(req, res) {
 
 app.get('/name*', function(req, res) {
   let query = req.url.slice(13);
-  mongo.chord.find({fingering: query}).exec((err, result) => {
+  mongo.chord.find({fingering: decodeURIComponent(query)}).exec((err, result) => {
     if (err) {
       console.error(err);
     } else if (result.length) {

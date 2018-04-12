@@ -14,30 +14,41 @@ const UserModal = props => {
             borderRadius: '10px',
             backgroundColor: 'white',
             textAlign: 'center',
-            fontSize: '2em'
+            fontSize: '1.5vw'
         },
         button: {
             padding: '10px',
             backgroundColor: 'green',
             borderRadius: '10px',
             color: 'white',
-            fontSize: '0.6em',
+            fontSize: '1vw',
             marginTop: '20px',
             cursor: 'pointer'
+        },
+        close: {
+            position: 'fixed',
+            top: '36%',
+            right: '36%',
+            cursor: 'pointer'
+        },
+        inputField: {
+            fontSize: '1.5vw',
+            width: '60%'
         }
     }
 
     return (
         <div style={styles.modal}>
+            <div style={styles.close} onClick={props.closeModal}>X</div>
             <h3>{props.type}</h3>
             <form>
                 <div>
                     <label>Username: </label>
-                    <input onChange={(e) => props.handleChange(e, 'username')} type="text" value={props.username}/>
+                    <input style={styles.inputField} onChange={(e) => props.handleChange(e, 'username')} type="text" value={props.username}/>
                 </div>
-                <div>
-                    <label>Password: </label>
-                    <input onChange={(e) => props.handleChange(e, 'password')} type="password" value={props.password}/>
+                <div style={{paddingTop: '10px'}}>
+                    <label style={{paddingRight: '5px'}}>Password: </label>
+                    <input style={styles.inputField} onChange={(e) => props.handleChange(e, 'password')} type="password" value={props.password}/>
                 </div>
                 <button style={styles.button} onClick={props.handleSubmit}>Submit</button>
             </form>

@@ -154,7 +154,6 @@ class App extends React.Component {
   }
 
   getFingering(query) {
-    console.log(query);
     $.ajax({
       method: 'GET',
       url: `/fingering/?query=${query}`,
@@ -190,6 +189,20 @@ class App extends React.Component {
           chord: replacement,
           chordName: results.name
         });
+      },
+      statusCode: {
+        404: () => {
+          this.setState({
+            genericModalMessage: 'Chord not found.',
+            genericModalOpen: true
+          });
+          setTimeout(() => {
+            this.setState({
+              genericModalMessage: '',
+              genericModalOpen: false
+            })
+          })
+        }
       }
     })
   }
@@ -223,7 +236,7 @@ class App extends React.Component {
               genericModalMessage: '',
               genericModalOpen: false
             })
-          }, 1000)
+          }, 2000)
         }
       })
     } else if ($('#progressionName').val()) {
@@ -236,7 +249,7 @@ class App extends React.Component {
           genericModalMessage: '',
           genericModalOpen: false
         })
-      }, 1000)
+      }, 2000)
     } else {
       this.setState({
         genericModalOpen: true,
@@ -247,7 +260,7 @@ class App extends React.Component {
           genericModalMessage: '',
           genericModalOpen: false
         })
-      }, 1000)    }
+      }, 2000)    }
   }
 
   retrieveProgression() {
@@ -272,7 +285,7 @@ class App extends React.Component {
               genericModalMessage: '',
               genericModalOpen: false
             })
-          }, 1000)
+          }, 2000)
         },
         fail: (data) => {
           this.setState({
@@ -285,7 +298,7 @@ class App extends React.Component {
               genericModalMessage: '',
               genericModalOpen: false
             })
-          }, 1000)
+          }, 2000)
         }
       })
     } else {
@@ -298,7 +311,7 @@ class App extends React.Component {
           genericModalMessage: '',
           genericModalOpen: false
         })
-      }, 1000)
+      }, 2000)
     }
   }
 
@@ -320,7 +333,7 @@ class App extends React.Component {
             genericModalMessage: '',
             genericModalOpen: false
           })
-        }, 1000)
+        }, 2000)
       },
       fail: (message) => {
         this.setState({
@@ -332,7 +345,7 @@ class App extends React.Component {
             genericModalMessage: '',
             genericModalOpen: false
           })
-        }, 1000)
+        }, 2000)
       }
     })
   }
@@ -397,7 +410,7 @@ class App extends React.Component {
             genericModalMessage: '',
             genericModalOpen: false
           })
-        }, 1000)
+        }, 2000)
       },
       fail: () => {
         this.setState({
@@ -409,7 +422,7 @@ class App extends React.Component {
             genericModalMessage: '',
             genericModalOpen: false
           })
-        }, 1000)
+        }, 2000)
       }
     })
   }
@@ -433,7 +446,7 @@ class App extends React.Component {
           });
           setTimeout(() => {
             this.setState({ userModalOpen: false, genericModalOpen: false, genericModalMessage: '' })
-          }, 1000)
+          }, 2000)
         },
         statusCode: {
           500: () => {
@@ -446,7 +459,7 @@ class App extends React.Component {
                 genericModalMessage: '',
                 genericModalOpen: false
               })
-            }, 1000)
+            }, 2000)
           }
         },
         fail: (data) => {
@@ -459,7 +472,7 @@ class App extends React.Component {
               genericModalMessage: '',
               genericModalOpen: false
             })
-          }, 1000)
+          }, 2000)
         }
       }) : 
       $.ajax({
@@ -492,6 +505,15 @@ class App extends React.Component {
           }, 1000)
         }
       })
+  }
+
+  closeModal() {
+    if (this.state.genericModalOpen) {
+      this.setState({ genericModalOpen: false });
+    }
+    if (this.state.userModalOpen) {
+      this.setState({ userModalOpen: false });
+    }
   }
 
   handleChange(e, name) {
@@ -560,10 +582,11 @@ class App extends React.Component {
         username={this.state.username}
         password={this.state.password}
         handleChange={this.handleChange.bind(this)}
-        handleSubmit={this.handleSubmit.bind(this)} 
-      /> : null}
-      {this.state.genericModalOpen ? 
-      <GenericModal message={this.state.genericModalMessage}/> : null}
+        handleSubmit={this.handleSubmit.bind(this)}
+        closeModal={this.closeModal.bind(this)} 
+        /> : null}
+      {this.state.genericModalOpen ?  
+        <GenericModal message={this.state.genericModalMessage} closeModal={this.closeModal.bind(this)}/> : null}
     </div>)
   }
 }

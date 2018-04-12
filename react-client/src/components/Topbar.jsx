@@ -11,13 +11,13 @@ const Topbar = props => {
             marginTop: '-8px',
             marginLeft: '-10px',
             textAlign: 'left',
-            paddingLeft: '100px'
+            paddingLeft: '10%'
         },
         login: {
             float: 'left',
             display: 'inline',
-            marginLeft: '70%',
-            marginTop: '-42px'
+            marginLeft: '60%',
+            marginTop: '-60px'
         },
         button: {
             display: 'inline',
@@ -26,12 +26,19 @@ const Topbar = props => {
             marginLeft: '20px',
             borderRadius: '5px',
             cursor: 'pointer',
+        },
+        welcome: {
+            display: 'block',
+            clear: 'none',
+            fontSize: '1.5em',
+            marginTop: '-2px',
+            paddingTop: '18px'
         }
     }
 
     return(
         <div style={styles.topbar}>
-            <p style={{display: 'inlineBlock'}} >Welcome{props.loggedInUser ? `, ${props.loggedInUser}` : null}</p>
+            <p style={styles.welcome}>Welcome{props.loggedInUser ? `, ${props.loggedInUser}` : null}</p>
             <div style={styles.login}>
                 <button style={styles.button} onClick={props.signup}>Signup</button>
                 <button style={styles.button} onClick={props.login}>Login</button>

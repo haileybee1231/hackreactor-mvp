@@ -14,7 +14,7 @@ const GenericModal = props => {
             borderRadius: '10px',
             backgroundColor: 'white',
             textAlign: 'center',
-            paddingTop: '50px',
+            paddingTop: '30px',
             fontSize: '2em'
         },
         button: {
@@ -25,11 +25,18 @@ const GenericModal = props => {
             fontSize: '0.6em',
             marginTop: '20px',
             cursor: 'pointer'
+        },
+        close: {
+            position: 'fixed',
+            top: '43.5%',
+            right: '40.5%',
+            cursor: 'pointer'
         }
     }
 
     return (
         <div style={styles.modal}>
+            <div style={styles.close} onClick={props.closeModal}>X</div>
             <p>{props.message}</p>
         </div>
     )
