@@ -28,7 +28,6 @@ const isLoggedIn = (req, res, next) => {
 
 app.get('/fingering*', function(req, res) {
   let query = decodeURIComponent(req.url.slice(18));
-  query = query.replace('#', '%23');
   mongo.chord.find({name: query}).exec((err, result) => {
     if (err) {
       console.error(err);
@@ -39,6 +38,7 @@ app.get('/fingering*', function(req, res) {
       res.write(JSON.stringify(retrieved));
       res.status(200).send()
     } else {
+      query = query.replace('#', '%23');
       fetcher.fetchChord(query, (data) => {
         let chord = JSON.parse(data).objects[0];
         if (!chord) {

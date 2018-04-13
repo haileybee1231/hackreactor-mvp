@@ -133,6 +133,20 @@ class App extends React.Component {
           })
           $('#chordName').html('Chord not in library, or API query limit reached =,( Try another chord or try again later.');
         }
+      },
+      statusCode: {
+        404: () => {
+          this.setState({
+            genericModalMessage: 'Chord not found.',
+            genericModalOpen: true
+          });
+          setTimeout(() => {
+            this.setState({
+              genericModalMessage: '',
+              genericModalOpen: false
+            })
+          })
+        }
       }
     })
   }
@@ -210,9 +224,8 @@ class App extends React.Component {
 
   showChord(e) {
     e.preventDefault();
-    let str = $(e.target).html().slice(-26);
-    str = str.slice(0, 6);
-    this.getFingering(str);
+    let str = $(e.target).html().split(/<|>/g)[2];
+    this.getFingering(encodeURIComponent(str));
   }
 
   saveProgression() {
@@ -291,7 +304,6 @@ class App extends React.Component {
         },
         statusCode: {
           404: (data) => {
-            console.log();
             this.setState({
               genericModalOpen: true,
               genericModalMessage: 'Progression not found.'
