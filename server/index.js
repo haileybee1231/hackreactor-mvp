@@ -44,11 +44,15 @@ app.get('/fingering*', function(req, res) {
         if (!chord) {
           res.status(404).end();
           return;
-        } else if (!mongo.chord.find({name: chord.name})) {
-          mongo.saveChord(chord.name, chord.code);
-        }
-        if (chord) {
-          res.status(200).send(data);
+        } else {
+          mongo.chord.find({ name: chord.name }).exec((err, result) => {
+            if (err) {
+              console.error(err);
+            } else if (!result.length) {
+              mongo.saveChord(chord.name, chord.code);
+            }
+            res.status(200).send(data);
+          });
         } 
       });
     }

@@ -85,7 +85,7 @@ const ChordForm = ({chord, fingeringChart}) => (
       <h4 style={styles.h4}>Other:</h4>
       <input type="text" placeholder="Other" style={{"maxWidth": "100px"}}></input>
     </div>
-    <div style={{'margin': '20px', 'paddingBottom':'20px'}}>
+    <div style={{'margin': '20px', 'paddingBottom':'-5px'}}>
       <button style={styles.button} onClick={fingeringChart.bind(this)}>Get Chord Fingering</button>
     </div>
   </form>

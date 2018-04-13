@@ -39,6 +39,7 @@ const styles = {
     'margin': '2px',
     'borderRadius': '12px',
     'fontSize': '1em',
+    'padding': '10px',
     'cursor': 'pointer'
   },
   input: {

@@ -96,7 +96,7 @@ class App extends React.Component {
     });
   }
 
-  getChordName() {
+  getChordName(callback) {
     let chord = '';
     let index = 1;
     while (index < 7) {
@@ -126,6 +126,7 @@ class App extends React.Component {
           this.setState({
             chordName: results.name
           })
+          callback ? callback() : null;
         } else {
           this.setState({
             chordName: ''
@@ -359,9 +360,11 @@ class App extends React.Component {
         fingering += this.state.chord[`string${index}`].fret;
         index++;
       };
-      this.setState({
-        progression: this.state.progression.concat({name: name, fingering: fingering})
-      })
+      if (name !== 'Chord not in library, or API query limit reached =,( Try another chord or try again later.') {
+        this.setState({
+          progression: this.state.progression.concat({name: name, fingering: fingering})
+        })
+      }
     })
   }
 
