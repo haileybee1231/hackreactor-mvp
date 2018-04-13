@@ -8,7 +8,8 @@ const progressionSchema = mongoose.Schema({
   }],
   name: String,
   length: Number,
-  date: Date
+  date: Date,
+  user: String
 });
 
 const chordSchema = mongoose.Schema({
@@ -25,8 +26,8 @@ const Progression = mongoose.model('Progression', progressionSchema);
 const Chord = mongoose.model('Chord', chordSchema);
 const User = mongoose.model('User', userSchema);
 
-const saveProgression = (chords, name, length, date) => {
-  let progression = new Progression({chords: chords, name: name, length: length, date: date});
+const saveProgression = (chords, name, length, date, user) => {
+  let progression = new Progression({chords: chords, name: name, length: length, date: date, user: user});
 
   progression.save(err => {
     if (err) {

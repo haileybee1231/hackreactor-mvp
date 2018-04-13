@@ -6,7 +6,8 @@ const styles = {
     float: 'left'
   },
   horizontal: {
-    width: '3vmin'
+    width: '3vmin',
+    cursor: 'pointer'
   },
   vertical: {
     width: '3vmin',

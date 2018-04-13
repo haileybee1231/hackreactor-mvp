@@ -236,7 +236,8 @@ class App extends React.Component {
             this.setState({
               genericModalMessage: '',
               genericModalOpen: false
-            })
+            });
+            $('#progressionName').val('');
           }, 2000)
         }
       })
@@ -279,7 +280,7 @@ class App extends React.Component {
           this.setState({
             genericModalOpen: true,
             genericModalMessage: `Progression ${name} successfully retrieved!`,
-            progression: JSON.parse(data)[0].chords
+            progression: data.chords
           });
           setTimeout(() => {
             this.setState({
@@ -288,11 +289,25 @@ class App extends React.Component {
             })
           }, 2000)
         },
+        statusCode: {
+          404: (data) => {
+            console.log();
+            this.setState({
+              genericModalOpen: true,
+              genericModalMessage: 'Progression not found.'
+            });
+            setTimeout(() => {
+              this.setState({
+                genericModalMessage: '',
+                genericModalOpen: false
+              })
+            }, 2000)
+          }
+        },
         fail: (data) => {
           this.setState({
             genericModalOpen: true,
-            genericModalMessage: data,
-            progression: JSON.parse(data)[0].chords
+            genericModalMessage: data
           });
           setTimeout(() => {
             this.setState({
@@ -319,36 +334,53 @@ class App extends React.Component {
   deleteProgression() {
     let name = $('#progressionName').val();
     let data = {name: name};
-    $.ajax({
-      type: 'DELETE',
-      url: '/progression',
-      contentType: 'application/json',
-      data: JSON.stringify(data),
-      success: (message) => {
-        this.setState({
-          genericModalOpen: true,
-          genericModalMessage: message
-        });
-        setTimeout(() => {
+    if (name) {
+      $.ajax({
+        type: 'DELETE',
+        url: '/progression',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: () => {
           this.setState({
-            genericModalMessage: '',
-            genericModalOpen: false
-          })
-        }, 2000)
-      },
-      fail: (message) => {
+            genericModalOpen: true,
+            genericModalMessage: `Progression "${name}" deleted.`
+          });
+          setTimeout(() => {
+            this.setState({
+              genericModalMessage: '',
+              genericModalOpen: false,
+              progression: []
+            });
+            $('#progressionName').val('');
+          }, 2000)
+        },
+        statusCode: {
+          404: () => {
+            this.setState({
+              genericModalOpen: true,
+              genericModalMessage: 'Progression not found.'
+            });
+            setTimeout(() => {
+              this.setState({
+                genericModalMessage: '',
+                genericModalOpen: false
+              });
+            }, 2000);
+          }
+        }
+      });
+    } else {
+      this.setState({
+        genericModalOpen: true,
+        genericModalMessage: 'Please enter a progression name.'
+      });
+      setTimeout(() => {
         this.setState({
-          genericModalOpen: true,
-          genericModalMessage: message
+          genericModalMessage: '',
+          genericModalOpen: false
         });
-        setTimeout(() => {
-          this.setState({
-            genericModalMessage: '',
-            genericModalOpen: false
-          })
-        }, 2000)
-      }
-    })
+      }, 2000);
+    }
   }
 
   addToProgression() {
@@ -406,7 +438,9 @@ class App extends React.Component {
         this.setState({
           loggedInUser: '',
           genericModalOpen: true,
-          genericModalMessage: 'Successfully logged out!'
+          genericModalMessage: 'Successfully logged out!',
+          progression: [],
+          bar: 0
         });
         setTimeout(() => {
           this.setState({
@@ -566,19 +600,21 @@ class App extends React.Component {
       <div>
         <ChordForm fingeringChart={this.fingeringChart.bind(this)} chord={this.state.chord}/>
       </div>
-      <div>
-        <Progression
-          progression={this.state.progression}
-          saveProgression={this.saveProgression.bind(this)}
-          retrieveProgression={this.retrieveProgression.bind(this)}
-          deleteProgression={this.deleteProgression.bind(this)}
-          removeFromProgression={this.removeFromProgression.bind(this)}
-          addToProgression={this.addToProgression.bind(this)}
-          startOver={this.startOver.bind(this)}
-          getChordName={this.getChordName.bind(this)}
-          showChord={this.showChord.bind(this)}
-        />
-      </div>
+      {this.state.loggedInUser ? 
+        <div>
+          <Progression
+            progression={this.state.progression}
+            saveProgression={this.saveProgression.bind(this)}
+            retrieveProgression={this.retrieveProgression.bind(this)}
+            deleteProgression={this.deleteProgression.bind(this)}
+            removeFromProgression={this.removeFromProgression.bind(this)}
+            addToProgression={this.addToProgression.bind(this)}
+            startOver={this.startOver.bind(this)}
+            getChordName={this.getChordName.bind(this)}
+            showChord={this.showChord.bind(this)}
+          />
+        </div> : <div style={{height: '50px'}}></div>
+      }
       {this.state.userModalOpen ? 
       <UserModal 
         type={this.state.modalType} 

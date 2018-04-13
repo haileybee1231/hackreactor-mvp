@@ -79,49 +79,56 @@ app.get('/name*', function(req, res) {
   });
 })
 
-app.post('/progression', function(req, res) {
+app.post('/progression', isLoggedIn, function(req, res) {
   let progression = req.body;
   let {chords, name, date} = progression;
   let length = progression.chords.length;
   
   mongo.progression.find({name: name}).exec((err, result) => {
+    let userFound = false;
+    result.forEach(record => {
+      if (record.user === req.user[0].username) {
+        userFound = true;
+      }
+    });
     if (err) {
       console.error('Error finding progression: ', err);
-    } else if (result.length !== 0) {
+    } else if (result.length !== 0 && userFound) {
       console.log('Name in request is already used.')
-      res.status(201).send('That name is already taken, please choose another.')
+      res.status(201).send('That name is already taken.')
     } else {
-      mongo.saveProgression(chords, name, length, date);
+      mongo.saveProgression(chords, name, length, date, req.user[0].username);
       console.log(`Progression ${name} successfully added to database.`)
       
-      res.status(201).send('Progression successfully added to database.');
+      res.status(201).send('Progression saved.');
     }
   })
 })
 
-app.get('/progression*', function(req, res) {
+app.get('/progression*', isLoggedIn, function(req, res) {
   let name = JSON.parse(decodeURIComponent(req.url).slice(13)).name;
   
-  mongo.progression.find({name: name}).exec((err, result) => {
+  mongo.progression.find({name: name, user: req.user[0].username}).exec((err, result) => {
     if (err) {
-      console.error(`Error finding ${name} in databse.`)
-    } else if (result.length === 0) {
-      res.send('Record not found in database.')
+      console.error(`Error finding ${name} in databse.`);
+    } else if (!result.length) {
+      res.status(404).end();
+    } else {
+      res.status(200).send(result[0]);
     }
-    res.status(200).send(JSON.stringify(result));
   })
 })
 
-app.delete('/progression', function(req, res) {
+app.delete('/progression', isLoggedIn, function(req, res) {
   let name = req.body.name;
   
-  mongo.progression.remove({name: name}).exec((err, result) => {
+  mongo.progression.remove({name: name, user: req.user[0].username}).exec((err, result) => {
     if (err) {
       res.send(err);
     } else if (result.n > 0) {
-      res.send(`Progression ${name} successfully deleted from database.`);
+      res.status(204).end();
     } else {
-      res.send(`Progression ${name} not found in database.`)
+      res.status(404).end();
     }
   })
 })

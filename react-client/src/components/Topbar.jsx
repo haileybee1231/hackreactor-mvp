@@ -38,7 +38,7 @@ const Topbar = props => {
 
     return(
         <div style={styles.topbar}>
-            <p style={styles.welcome}>Welcome{props.loggedInUser ? `, ${props.loggedInUser}` : null}</p>
+            <p style={styles.welcome}>Welcome{props.loggedInUser ? `, ${props.loggedInUser}` : '! Please log in to work on your progressions.'}</p>
             <div style={styles.login}>
                 <button style={styles.button} onClick={props.signup}>Signup</button>
                 <button style={styles.button} onClick={props.login}>Login</button>
