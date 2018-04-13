@@ -104,7 +104,7 @@ class App extends React.Component {
       index++;
     }
     if (this.state.bar > 0) {
-      for (let i = 0; i < chord.length; i++) {
+      for (let i = 0; i < chord.length && i < 10; i++) {
         if (!isNaN(Number(chord[i]))) {
           chord = chord.slice(0, i) + (chord[i] - this.state.bar + 1) + chord.slice(i + 1, chord.length);
         }
@@ -398,6 +398,7 @@ class App extends React.Component {
   addToProgression() {
     this.getChordName(() => {
       let name = $('#chordName').html();
+      console.log(name);
       let fingering = '';
       let index = 1;
       while (index < 7) {
@@ -432,14 +433,14 @@ class App extends React.Component {
     this.setState({
       userModalOpen: !this.state.userModalOpen,
       modalType: 'Login'
-    })
+    });
   }
   
   signup() {
     this.setState({
       userModalOpen: !this.state.userModalOpen,
       modalType: 'Signup'
-    })
+    });
   }
 
   logout() {

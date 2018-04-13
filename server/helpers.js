@@ -8,7 +8,7 @@ const fetchChord = (nameOrFingering, callback) => {
     method: 'GET',
     headers: {
       'User-Agent': 'request',
-      'Guitarparty-Api-Key': process.env.APIKEY
+      'Guitarparty-Api-Key': config.APIKEY
     },
     url: destination
   }
